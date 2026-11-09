@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>護理實習日記 🩺｜626 的醫院生存日常</title>
+<style>
+  :root{
+    --bg:#fdf2e7; --card:#fffaf2; --ink:#5c4a3f; --sub:#a5917f; --line:#f0dcc8;
+    --accent:#ef8398; --accent2:#e8a24b; --bubble:#3a2f2a; --bubble-ink:#f6efe6;
+    --chip:#fffdf9; --shadow:0 6px 22px rgba(170,110,60,.10);
+  }
+  html.dark{
+    --bg:#201813; --card:#2a211a; --ink:#f1e7db; --sub:#a59483; --line:#443626;
+    --accent:#f2a0b3; --accent2:#ecb569; --bubble:#161210; --bubble-ink:#efe6da;
+    --chip:#31261e; --shadow:0 6px 22px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;
+    color:var(--ink); line-height:1.8;
+    background:linear-gradient(180deg,#ffe7cf 0%,var(--bg) 380px);
+    transition:background .3s,color .3s;
+  }
+  html.dark body{background:linear-gradient(180deg,#2b2019 0%,var(--bg) 380px)}
+  /* ───── 頂欄 ───── */
+  header.top{
+    position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
+    padding:12px 22px;border-bottom:1px solid var(--line);
+    background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(10px);
+  }
+  .brand{font-weight:800;font-size:17px;cursor:pointer;letter-spacing:.5px}
+  .brand small{color:var(--sub);font-weight:400}
+  .tools{display:flex;gap:8px}
+  .tbtn{
+    width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);
+    font-size:16px;cursor:pointer;transition:transform .15s,border-color .15s;
+  }
+  .tbtn:hover{transform:translateY(-2px);border-color:var(--accent)}
+  /* ───── 主體 ───── */
+  main{max-width:1060px;margin:0 auto;padding:0 20px 40px}
+  .hero{padding:30px 6px 6px;text-align:center}
+  .hero h1{
+    font-size:clamp(30px,5.5vw,46px);font-weight:800;letter-spacing:1px;
+    background:linear-gradient(92deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero .sub{color:var(--sub);margin-top:8px;font-size:15px}
+  .hero .ecg{width:min(520px,90%);margin:14px auto 0;display:block}
+  .buddies{position:relative;display:flex;justify-content:center;align-items:flex-end;gap:2px;margin:16px 0 0}
+  .buddies .b2{transform:translateY(5px) rotate(7deg)}
+  .deco{position:absolute;font-size:19px}
+  .d1{left:calc(50% - 158px);top:0;transform:rotate(-14deg)}
+  .d2{left:calc(50% + 122px);top:16px}
+  .d3{left:calc(50% + 152px);top:-4px;font-size:16px}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:18px}
+  .stat{
+    background:var(--chip);border:1px solid var(--line);border-radius:999px;
+    padding:6px 16px;font-size:13.5px;color:var(--ink);box-shadow:var(--shadow);
+  }
+  .note{
+    margin:24px 0 4px;background:color-mix(in srgb,var(--accent2) 10%,var(--card));
+    border:1px dashed color-mix(in srgb,var(--accent2) 55%,transparent);
+    border-radius:18px;padding:14px 20px;font-size:13.5px;color:var(--sub);
+  }
+  .note b{color:var(--ink)}
+  /* ───── 心情統計 ───── */
+  .statsbox{
+    background:var(--card);border:1px solid var(--line);border-radius:22px;
+    padding:22px 26px;box-shadow:var(--shadow);margin:20px 0 6px;
+  }
+  .stitle{font-weight:800;font-size:16px;margin-bottom:16px;letter-spacing:1px}
+  .bars{display:flex;flex-direction:column;gap:9px}
+  .brow{display:flex;align-items:center;gap:10px}
+  .bico{width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center}
+  .blabel{width:88px;font-size:13.5px;flex:0 0 auto}
+  .btrack{flex:1;height:14px;background:color-mix(in srgb,var(--line) 55%,transparent);border-radius:999px;overflow:hidden}
+  .bfill{height:100%;border-radius:999px;transition:width .5s ease}
+  .bcount{width:46px;text-align:right;font-size:12.5px;color:var(--sub);flex:0 0 auto}
+  .stitle2{font-weight:800;font-size:16px;margin:22px 0 12px;letter-spacing:1px}
+  .strip{display:flex;flex-wrap:wrap;gap:7px}
+  .cell{
+    width:38px;height:38px;border-radius:11px;border:none;color:#fff;font-weight:800;font-size:14px;
+    cursor:pointer;transition:transform .15s;font-family:inherit;
+  }
+  .cell:hover{transform:translateY(-3px) scale(1.06)}
+  .cell.rest{background:transparent;border:1.5px dashed var(--line);color:var(--sub);cursor:default;font-weight:400;font-size:12px}
+  .cell.rest:hover{transform:none}
+  .snote{font-size:12.5px;color:var(--sub);margin-top:10px}
+  /* ───── 篩選 ───── */
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:18px 2px 14px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{
+    flex:0 0 auto;border:1px solid var(--line);background:var(--chip);border-radius:999px;
+    padding:7px 16px;font-size:13.5px;cursor:pointer;color:var(--ink);transition:all .15s;white-space:nowrap;
+  }
+  .chip:hover{border-color:var(--accent)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+  /* ───── 目錄卡片 ───── */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 22px;
+    cursor:pointer;box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s,border-color .18s;
+    display:flex;flex-direction:column;gap:8px;animation:fadein .35s ease;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(170,110,60,.16);border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .card .row1{display:flex;align-items:center;gap:10px}
+  .card .emo{
+    width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    background:color-mix(in srgb,var(--accent2) 14%,transparent);flex:0 0 auto;
+  }
+  .card .date{font-size:12.5px;color:var(--sub)}
+  .card .tag{
+    margin-left:auto;font-size:11.5px;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);
+    border-radius:999px;padding:2px 10px;white-space:nowrap;
+  }
+  .card h3{font-size:17.5px;font-weight:800}
+  .card .teaser{font-size:13.5px;color:var(--sub);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card .meta{font-size:12px;color:var(--sub);margin-top:auto;padding-top:6px}
+  /* ───── 內文 ───── */
+  .detail{max-width:760px;margin:0 auto;animation:fadein .3s ease}
+  .back{display:inline-block;margin:26px 0 14px;color:var(--sub);text-decoration:none;font-size:14px}
+  .back:hover{color:var(--accent)}
+  .dcard{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:34px 36px;box-shadow:var(--shadow)}
+  .d-date{font-size:14px;color:var(--sub);letter-spacing:1px}
+  .d-meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 6px}
+  .d-meta .pill{font-size:12.5px;border-radius:999px;padding:4px 14px;border:1px solid var(--line);background:var(--chip);color:var(--sub)}
+  .d-meta .pill.cat{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent);font-weight:700}
+  .dcard h1{font-size:clamp(24px,4.5vw,32px);font-weight:800;margin:4px 0 16px}
+  .d-body p{margin:10px 0;font-size:15.5px}
+  h2.sec{font-size:14px;color:var(--sub);letter-spacing:2px;font-weight:700;margin:30px 0 12px}
+  .qb{
+    background:var(--bubble);color:var(--bubble-ink);border-radius:4px 16px 16px 16px;
+    padding:10px 16px;margin:8px 0;max-width:85%;font-size:14.5px;
+  }
+  .qb .qt{font-size:11px;color:#b3a597;text-align:right;margin-top:3px}
+  .phgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+  .ph{
+    aspect-ratio:4/3;border:2px dashed var(--line);border-radius:18px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+    color:var(--sub);font-size:12.5px;text-align:center;padding:12px;transition:border-color .2s;
+    background:color-mix(in srgb,var(--accent2) 5%,transparent);
+  }
+  .ph:hover{border-color:var(--accent)}
+  .ph .t{font-size:11px;opacity:.8}
+  .ph.hasimg{padding:0;border-style:solid;background:var(--card);gap:0;cursor:zoom-in}
+  .ph.hasimg img{width:100%;flex:1;min-height:0;object-fit:cover;display:block}
+  .ph.hasimg .cap{font-size:11.5px;padding:6px 10px;color:var(--sub)}
+  #lb{
+    position:fixed;inset:0;background:rgba(25,15,8,.86);display:none;z-index:100;
+    align-items:center;justify-content:center;flex-direction:column;gap:12px;cursor:zoom-out;padding:26px;
+  }
+  #lb.on{display:flex}
+  #lb img{max-width:92vw;max-height:82vh;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  #lb .cap{color:#f2e8dc;font-size:13.5px}
+  .share{margin-top:26px;text-align:center}
+  .share button{
+    border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:10px 22px;
+    font-size:14px;cursor:pointer;color:var(--ink);transition:all .15s;
+  }
+  .share button:hover{border-color:var(--accent);color:var(--accent)}
+  .pn{display:flex;justify-content:space-between;gap:12px;margin:22px 0 8px}
+  .pn button{
+    flex:1;border:1px solid var(--line);background:var(--card);border-radius:16px;padding:13px 16px;
+    font-size:14px;cursor:pointer;color:var(--ink);transition:all .15s;text-align:center;
+  }
+  .pn button:hover:not(:disabled){border-color:var(--accent);transform:translateY(-2px)}
+  .pn button:disabled{opacity:.35;cursor:default}
+  .pn small{display:block;color:var(--sub);font-size:11px}
+  /* ───── 頁尾 ───── */
+  footer{max-width:1060px;margin:0 auto;padding:26px 22px 46px;border-top:1px solid var(--line);color:var(--sub);font-size:13px}
+  footer b{color:var(--ink)}
+  footer li{margin:4px 0 4px 18px}
+  .footbunny{display:flex;justify-content:center;margin-top:20px;opacity:.92}
+  #toast{
+    position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);opacity:0;pointer-events:none;
+    background:var(--bubble);color:var(--bubble-ink);border-radius:999px;padding:10px 22px;font-size:14px;
+    transition:all .25s;z-index:99;box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+  #toast.on{opacity:1;transform:translate(-50%,0)}
+  svg.bunny{display:block}
+  .card .emo svg.bunny{margin:0 auto}
+  .pill svg.bunny{display:inline-block;vertical-align:-4px;margin-right:4px}
+  .ph svg.bunny{margin:0 auto}
+  @media (max-width:560px){
+    .dcard{padding:24px 20px}
+    .card{padding:16px 18px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand" onclick="location.hash=''">🩺 護理實習日記 <small>· 626</small></div>
+  <div class="tools">
+    <button class="tbtn" title="隨機翻一天" onclick="randomDay()">🎲</button>
+    <button class="tbtn" id="darkBtn" title="深色模式" onclick="toggleDark()">🌙</button>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <b>🚧 雛形說明（俾你睇完俾意見）</b>
+  <ul>
+    <li><b>圖片已全部上陣</b>：8 張真圖已經入場，㩒一下可以放大睇。日後想加圖，一樣：圖檔放入 <b>images/</b>，喺程式碼嘅 photos 加 <b>src:"images/xxx.jpg"</b> 就自動顯示。</li>
+    <li><b>兔兔插圖係原創手繪風 SVG</b>：Chiikawa 是版權角色，唔方便直接擺公開網頁；呢啲兔兔係同樣瘋癲小白兔風格嘅原創版。想換返自己儲存嘅官方圖，同樣用 src 機制就得。</li>
+    <li><b>每篇日記有獨立網址</b>：例如 <b>#2026-10-22</b>，可以單篇分享俾人。</li>
+    <li><b>放上網俾人點開</b>：將成個資料夾拖上 Netlify Drop（app.netlify.com/drop，免費免安裝）或 GitHub Pages，即刻有一條公開網址。</li>
+  </ul>
+  <div class="footbunny" id="footbunny"></div>
+</footer>
+
+<div id="toast"></div>
+<div id="lb" onclick="this.classList.remove('on')"><img alt="放大圖片"><div class="cap"></div></div>
+
+<script>
+/* ═══════════ 資料區（改呢度就得） ═══════════
+   cat  : 分類（對應下面 CATS）
+   quotes: [時間, 原話]
+   photos: {label: 相框說明, time: 時間, src: "images/xxx.jpg" ← 有圖先填} */
+const CATS = {
+  "熱":      {e:"🥵", b:"hot",      c:"#ec6a4f"},
+  "想家":    {e:"🏠", b:"wantHome", c:"#8a79cf"},
+  "崩潰與成長":{e:"😤", b:"crash",    c:"#b04a7e"},
+  "荒謬搞笑":  {e:"😆", b:"laugh",    c:"#6fae62"},
+  "暖心小確幸":{e:"🥺", b:"love",     c:"#f08bb5"}
+};
+
+const DIARY = [
+  {
+    id:"2026-10-12", cat:"想家", title:"完全訓唔到",
+    teaser:"瞓又瞓唔好，人喺醫院，心喺屋企。",
+    body:[
+      "今日想講：我完全瞓唔到。瞓又瞓唔好，瞓極都係嗰句——想回家。",
+      "實習的日子，原來連瞓覺都係挑戰項目之一。"
+    ],
+    quotes:[["20:55","我想講我完全訓吾到"],["20:55","訓又訓吾好"],["20:57","想回家"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-13", cat:"熱", title:"戶外一秒都融化",
+    teaser:"今日主題只有一個字：熱。",
+    body:[
+      "今日的主題只有一個字：熱。",
+      "收工時間行出戶外，一秒融化；以為返入病房會涼啲？病房都一樣熱。十月的太陽，對我哋毫無憐憫。"
+    ],
+    quotes:[["18:58","好撚熱"],["18:58","啲收工時間係戶外一秒都融化"],["18:58","病房都好撚熱"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-15", cat:"荒謬搞笑", title:"師姐對病人「黑化」",
+    teaser:"教我嗰陣有人問嘢完全唔理，講完嘢先至啤住個病人。",
+    body:[
+      "今日想講一件事：大6嘅師姐，係對病人「黑化」嘅。",
+      "即係佢教緊我嘅時候，有人問佢嘢，佢會完全唔理；然後同我講完嘢之後，先至啤住個病人，問佢到底發生咗乜嘢事。",
+      "原來帶教同病人之間，有一種微妙嘅優先次序。"
+    ],
+    quotes:[["11:28","我想講"],["11:28","大6啲師姐係對病人黑化"],["11:28","即係佢教緊我嘅時候有人問佢嘢佢會完全唔理"],["11:29","然後同我講完嘢之後先至啤住個病人問佢乜撚嘢事"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-16", cat:"暖心小確幸", title:"師姐叫我早收工",
+    teaser:"下班下班！今日被師姐放行，小確幸一枚。",
+    body:[
+      "今日師姐叫我早收工！",
+      "下班下班～人生的快樂，有時就係咁簡單。"
+    ],
+    quotes:[["22:47","師姐叫我早收工"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-17", cat:"熱", title:"第一次睡醫院",
+    teaser:"心跳好快、醫院乜都好就係熱；晚上再上班，第一次瞓醫院。",
+    body:[
+      "呢排心跳好快。",
+      "大6醫院什麼都好，就是好熱。熱到我要黑化了——真係好熱，我係呢度住院嘅話應該會發癲。呢間醫院俾人投訴最多嘅項目，應該就係「熱」。",
+      "晚上：再上班。今日第一次瞓醫院。🌙"
+    ],
+    quotes:[["15:55","呢排心跳好快"],["15:55","大6醫院什麼都好"],["15:55","就是好熱"],["15:55","好撚熱"],["15:55","我要黑化了"],["15:56","真係好撚熱"],["15:56","我係呢度住院我應該發癲"],["15:56","呢間醫院比人投訴最多應該係熱"],["22:18","6.再上班"],["22:24","第一次睡醫院"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-18", cat:"崩潰與成長", title:"電腦驚魂與遠程維修",
+    teaser:"掉幀、音頻消失、暴走邊緣，最後仲笑到我67。",
+    body:[
+      "中午：熱死。",
+      "晚上，我部電腦開始掉幀；然後我一個唔小心，把個音頻剷走咗——部電腦即場變啞。",
+      "喺臨暴走邊緣，決定遠程維修。中途我又不小心刪咗佢（對，又係嗰個音頻）。好在最後佢修完咗。",
+      "之後我一直叫佢 down 番隻蟹俾我——就係程式列表入面嗰隻 Realtek 蟹仔🦀，笑到我67。今日嘅崩潰同快樂，都幾密集。"
+    ],
+    quotes:[["13:33","熱死"],["19:04","我岩岩部電腦掉幀"],["19:04","然後我剛剛下野吾小心剷9走左我個音頻"],["19:04","部電腦啞左"],["19:05","在臨暴走邊緣決定遠程維修"],["19:05","我不小心刪了佢"],["19:05","佢修完了"],["19:06","然後我一直叫佢down番隻蟹比我"],["19:06","笑到我67"]],
+    photos:[
+      {label:"程式和功能入面嘅 Realtek 蟹仔 🦀", time:"10月18日 19:05", src:"images/crab-driver.jpg"}
+    ]
+  },
+  {
+    id:"2026-10-19", cat:"想家", title:"家真舒服",
+    teaser:"被窩嘅誘惑。一會又要回去了。",
+    body:[
+      "喺屋企攤咗一陣，被窩實在太舒服。",
+      "一會又要回去了。家真舒服。"
+    ],
+    quotes:[["19:47","一會又要回去了"],["19:47","家真舒服"]],
+    photos:[{label:"被窩照 🛏️", time:"10月19日 19:47", src:"images/home-comfy.jpg"}]
+  },
+  {
+    id:"2026-10-20", cat:"荒謬搞笑", title:"一杯奶茶引發的投訴",
+    teaser:"實習生投訴帶教點奶茶冇點佢份，仲話被孤立。",
+    body:[
+      "今日師姐同我講：旁邊有個課室嘅帶教被投訴。",
+      "投訴內容：一個實習生投訴有個老師點奶茶冇點佢嗰份，仲話佢孤立佢。",
+      "然後帶教話我哋態度太好了——有人仲會上堂玩手機唔聽佢講嘢，但係又唔可以 fail 嗰啲人。",
+      "護理界宇宙，今日又多咗一單奇聞。"
+    ],
+    quotes:[["17:04","今天我的師姐告訴我"],["17:04","旁邊有個課室帶教被投訴"],["17:04","是一個實習生投訴有一個老師點奶茶沒點佢那份"],["17:05","孤立她"],["17:05","然後帶教說我們態度太好了"],["17:05","有人還會玩手機不聽她說話"],["17:05","還不能fail那些人"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-21", cat:"荒謬搞笑", title:"醫院經營遊戲",
+    teaser:"真人 online 版，每日任務好充實。",
+    body:[
+      "我而家玩嘅遊戲每日都好充實。",
+      "不過係真人 online 版本——醫院經營遊戲。"
+    ],
+    quotes:[["11:34","我現在玩的遊戲也每天好充實"],["11:34","不過是真人online"],["11:34","醫院經營遊戲"]],
+    photos:[{label:"10月21嘅飯菜 🍱", time:"10月21日 11:43", src:"images/lunch-1021.jpg"}]
+  },
+  {
+    id:"2026-10-22", cat:"暖心小確幸", title:"有佢係度",
+    teaser:"血糖機壞咗又登錯床號，嚇死之際，溫柔師姐一句「唔使驚」。",
+    body:[
+      "今日嗰個「大粒嘢」師姐，好溫柔。",
+      "個血糖機壞咗，之後又登錯床號，我直接嚇死，衝過去搵佢。佢就話：嗰啲血糖機係咁㗎啦，唔使驚——有佢係度。",
+      "其實嗰度有啲醫生對實習醫生都幾好；佢哋仲話我哋講嘅係台灣普通話 😂"
+    ],
+    quotes:[["16:44","好溫柔囉今日嗰個大粒野師姐 個血糖機壞鳩咗之後登錯床號"],["16:44","我直接嚇死嚇死"],["16:44","衝過去搵佢"],["16:44","佢就話嗰啲柒頭血糖機係咁叫我唔使驚"],["16:44","有佢係度"],["16:46","其實嗰度啲醫生部份都對實習醫生幾好"],["16:46","然後佢哋話我哋嗰啲係台灣普通話"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-23", cat:"崩潰與成長", title:"留低兩個鐘",
+    teaser:"冇提前告知就留低兩個鐘。我完全黑面。",
+    body:[
+      "今日：冇提前告知，留低咗我哋兩個鐘。",
+      "對比強烈嘅五個字：我四點就放。",
+      "我完全黑面。佢可以提前講㗎！"
+    ],
+    quotes:[["18:28","佢冇提前告知就留低咗我哋兩個鐘"],["18:28","我四點就放"],["18:29","我完全黑面"],["18:29","佢可以提前講㗎"]],
+    photos:[{label:"同「中大杏老師」傾排班嘅截圖", time:"10月23日 18:29", src:"images/schedule-chat.jpg"}]
+  },
+  {
+    id:"2026-10-26", cat:"熱", title:"太陽當空照",
+    teaser:"陽光大道、打車逃亡，仲有後勤剷走咗嘅冷氣。",
+    body:[
+      "這能不熱嗎？太陽當空照，今日行嘅係陽光大道。",
+      "下晝再補一刀：好撚熱呀個醫院——原來係後勤剷咗冷氣。呢間醫院對「熱」真係有堅持。",
+      "收工打車走人。我成日擸住個袋都唔使過安檢，但係個保安真係冇檢過我 😂"
+    ],
+    quotes:[["15:38","這能不熱嗎"],["15:38","太陽當空照"],["15:39","陽光大道"],["15:45","我成日擸住個袋都唔過安檢"],["15:45","但係個保安冇擸過我"],["15:49","我就賤"],["15:49","非得問"],["17:03","好撚熱呀個醫院"],["17:03","後勤剷左冷氣"]],
+    photos:[
+      {label:"陽光大道 ☀️", time:"10月26日 15:38", src:"images/sunny-road.jpg"}
+    ]
+  },
+  {
+    id:"2026-10-27", cat:"崩潰與成長", title:"成長就是要流好多眼淚",
+    teaser:"以前俾家屬鬧會覺得天塌了，而家已經無感。",
+    body:[
+      "今日諗起一件事：以前俾家屬鬧，我仲會唔開心，覺得天塌咗；而家已經無感，冷暴力佢地。",
+      "講出嚟好似好冷酷，但係喺病房捱過嘅人都明——呢啲眼淚唔係委屈，係經驗值。",
+      "成長，就係要流好多眼淚。"
+    ],
+    quotes:[["20:12","以前我比家屬鬧還會不開心"],["20:12","覺得天塌了"],["20:12","現在都無感了"],["20:12","冷暴力佢地"],["20:12","成長就是要流很多眼淚"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-28", cat:"荒謬搞笑", title:"人生第一條胃管",
+    teaser:"病人問：真係得㗎？我：插過好多次啦（其實第一次）。",
+    body:[
+      "今日插咗人生第一條胃管！",
+      "嗰個人問：係咪你插呀？真係得㗎？我即場發揮實習生專業演技：「有咩問題，我插過好多次啦。」",
+      "——其實，第一次插 😉 表情管理滿分，手定過支針筒。"
+    ],
+    quotes:[["20:21","今日插了胃管"],["20:21","哥個人問係咪我插 係咪真係得"],["20:22","我同佢講有咩問題我插過好多次"],["20:22","其實第一次插"],["20:22","😉"]],
+    photos:[]
+  },
+  {
+    id:"2026-10-29", cat:"暖心小確幸", title:"師姐牌滷味",
+    teaser:"朝早煙味襲擊、午餐難食，全靠師姐一盒滷味翻身。",
+    body:[
+      "朝早返到病房，一陣煙味撲面——好撚臭呀。可否可以唔好食煙？",
+      "午餐照舊開箱，不過今日嘅食評只有兩個字：難食。",
+      "好在下晝師姐出手相救：師姐做的滷味！雞腳、雞蛋浸滿一盒滷水，喺醫院食到呢個，即刻翻身——算唔算實習福利天花板？",
+      "原來最治癒嘅唔一定係落班，仲有人惦記住你哋個肚。"
+    ],
+    quotes:[["07:39","好撚臭呀"],["07:39","可否可以吾好食煙"],["12:20","難食"],["16:50","師姐做的"]],
+    photos:[
+      {label:"10月29嘅飯菜 🍱", time:"10月29日 12:07", src:"images/lunch-1029.jpg"},
+      {label:"師姐整嘅滷味（雞腳＋滷蛋）", time:"10月29日 16:50", src:"images/sister-luwei.jpg"}
+    ]
+  },
+  {
+    id:"2026-10-30", cat:"暖心小確幸", title:"心心貓",
+    teaser:"又遲放、等電梯五分鐘、阿姨開演唱會——好彩夜晚有隻心心貓。",
+    body:[
+      "今日又遲放，仲次次都揀我四點放嘅時間上堂。陰唔陰？更陰嘅仲喺後頭。",
+      "放學等電梯，等撚咗五分鐘；旁邊啲阿姨大聲到我耳機開到最大聲都仲係咁嘈。",
+      "不過夜晚都有補償：路上遇到一隻瞓平咗嘅貓，白白淨淨，瞇埋眼好乖，身上仲天生有個心心花紋——彷彿係醫院派出嚟嘅治愈哨兵：「今日辛苦晒，攞住呢個心心返屋企啦。」"
+    ],
+    quotes:[["16:59","又遲放"],["16:59","次次都揀我4.放黎上堂"],["16:59","陰不陰"],["16:59","更陰的來了"],["17:04","等撚左五分鐘"],["17:05","啲阿姨大聲到我耳機開最大聲都仲係咁撚嘈"]],
+    photos:[
+      {label:"心心貓 🐈", time:"10月30日 23:22", src:"images/heart-cat.jpg"}
+    ]
+  }
+];
+
+/* ═══════════ 原創兔兔插圖（SVG） ═══════════ */
+function bunny(v, s=44, cap=false){
+  const ink="#6b544a", pink="#f7bccb", earpink="#fad3dd", w="#fffdf8";
+  const ears=`<g>
+    <ellipse cx="43" cy="26" rx="9" ry="22" fill="${w}" stroke="${ink}" stroke-width="2.5" transform="rotate(-10 43 26)"/>
+    <ellipse cx="43" cy="29" rx="4.5" ry="13" fill="${earpink}" transform="rotate(-10 43 29)"/>
+    <ellipse cx="77" cy="26" rx="9" ry="22" fill="${w}" stroke="${ink}" stroke-width="2.5" transform="rotate(10 77 26)"/>
+    <ellipse cx="77" cy="29" rx="4.5" ry="13" fill="${earpink}" transform="rotate(10 77 29)"/></g>`;
+  const head=`<circle cx="60" cy="70" r="32" fill="${w}" stroke="${ink}" stroke-width="2.5"/>`;
+  const capSvg = cap?`<g transform="rotate(-6 60 40)">
+    <path d="M40 45 q20 -26 40 0 l-3.5 6 q-16.5 -19 -33 0 z" fill="#fff" stroke="${ink}" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M55 36.5 h10 M60 31.5 v10" stroke="${pink}" stroke-width="3" stroke-linecap="round" fill="none"/></g>`:"";
+  const blush=`<ellipse cx="37" cy="76" rx="7" ry="4.5" fill="${pink}" opacity=".55"/>
+    <ellipse cx="83" cy="76" rx="7" ry="4.5" fill="${pink}" opacity=".55"/>`;
+  const dotEyes=`<circle cx="48" cy="64" r="3.4" fill="${ink}"/><circle cx="72" cy="64" r="3.4" fill="${ink}"/>`;
+  const om=`<path d="M53 76 q3.5 4.5 7 0 q3.5 4.5 7 0" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>`;
+  const drop=(x,y,sc=1)=>`<g transform="translate(${x} ${y}) scale(${sc})"><path d="M0 0 q5 8 0 12 q-5 -4 0 -12" fill="#8fd0ef" stroke="#5aa9cf" stroke-width="1.4"/></g>`;
+  const heartP=(x,y,sc=1,fill="#e86a8a")=>`<path transform="translate(${x} ${y}) scale(${sc})" d="M0 3 c-2.5-4.5-9-1.5-6.5 3 c1.3 2.6 6.5 5.5 6.5 5.5 c0 0 5.2-2.9 6.5-5.5 c2.5-4.5-4-7.5-6.5-3 z" fill="${fill}"/>`;
+  let face="", extras="";
+  switch(v){
+    case "hot":
+      face=`<path d="M42 58 L50 64 L42 70 M78 58 L70 64 L78 70" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <ellipse cx="60" cy="78" rx="7" ry="8" fill="${ink}"/><ellipse cx="60" cy="82" rx="4.5" ry="3.5" fill="#e87f8d"/>`;
+      extras=drop(90,38)+drop(26,46,.7);
+      break;
+    case "wantHome":
+      face=dotEyes+`<path d="M54 80 q6 -5 12 0" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>`;
+      extras=drop(38,64);
+      break;
+    case "huh":
+      face=`<circle cx="48" cy="64" r="3" fill="${ink}"/><circle cx="72" cy="64" r="3" fill="${ink}"/>
+        <path d="M54 78 h12" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>`;
+      extras=`<text x="88" y="44" font-size="24" font-weight="700" fill="${ink}" font-family="inherit">？</text>`;
+      break;
+    case "crash":
+      face=`<circle cx="48" cy="63" r="5" fill="${ink}"/><circle cx="72" cy="63" r="5" fill="${ink}"/>
+        <ellipse cx="60" cy="80" rx="8" ry="6.5" fill="${ink}"/>`;
+      extras=`<g stroke="${ink}" stroke-width="2.4" stroke-linecap="round" fill="none">
+        <path d="M27 48 l7 5 M26 61 l8 -1 M93 48 l-7 5 M94 61 l-8 -1"/></g>`;
+      break;
+    case "laugh":
+      face=`<path d="M42 65 q6 -7 12 0 M66 65 q6 -7 12 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M50 74 q10 13 20 0 z" fill="${ink}"/><ellipse cx="60" cy="79.5" rx="4.5" ry="2.8" fill="#e87f8d"/>`;
+      break;
+    case "love":
+      face=heartP(48,56,.9)+heartP(72,56,.9)+om;
+      extras=heartP(94,32,.7)+heartP(22,40,.5,"#f2a0b3");
+      break;
+    case "angry":
+      face=`<path d="M42 59 l10 5 M78 59 l-10 5 M42 66 h10 M68 66 h10" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M53 79 h14" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>`;
+      extras=`<g stroke="#e05a4f" stroke-width="2.6" stroke-linecap="round" fill="none">
+        <path d="M91 33 l6 6 M97 33 l-6 6 M94 30.5 v11"/></g>`;
+      break;
+    case "sleep":
+      face=`<path d="M42 64 q6 5 12 0 M66 64 q6 5 12 0" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>
+        <ellipse cx="60" cy="78" rx="3.5" ry="4" fill="${ink}"/>`;
+      extras=`<text x="88" y="44" font-size="16" font-weight="700" fill="${ink}" font-family="inherit">z</text>
+        <text x="97" y="32" font-size="12" font-weight="700" fill="${ink}" font-family="inherit">z</text>`;
+      break;
+    default: /* happy + sparkles */
+      face=dotEyes+om;
+      extras=`<g fill="#f2b53c">
+        <path d="M27 40 l2.2 5.5 5.5 2.2 -5.5 2.2 -2.2 5.5 -2.2 -5.5 -5.5 -2.2 5.5 -2.2 z"/>
+        <path d="M96 34 l1.8 4.4 4.4 1.8 -4.4 1.8 -1.8 4.4 -1.8 -4.4 -4.4 -1.8 4.4 -1.8 z"/></g>`;
+  }
+  return `<svg class="bunny" viewBox="0 0 120 120" width="${s}" height="${s}" aria-hidden="true">${ears}${head}${capSvg}${blush}${face}${extras}</svg>`;
+}
+
+/* ═══════════ 程式邏輯 ═══════════ */
+const WD = ["日","一","二","三","四","五","六"];
+const app = document.getElementById("app");
+const darkBtn = document.getElementById("darkBtn");
+let activeCat = "全部";
+
+function fmt(id){
+  const [y,m,d] = id.split("-").map(Number);
+  const dt = new Date(y, m-1, d);
+  return { y, md:`${m}月${d}日`, wd:`星期${WD[dt.getDay()]}`, d };
+}
+const totalQ = DIARY.reduce((s,e)=>s+e.quotes.length,0);
+const totalP = DIARY.reduce((s,e)=>s+e.photos.length,0);
+
+function moodStats(){
+  const counts = {};
+  DIARY.forEach(e=>counts[e.cat]=(counts[e.cat]||0)+1);
+  const max = Math.max(...Object.values(counts));
+  const rows = Object.keys(CATS)
+    .sort((a,b)=>(counts[b]||0)-(counts[a]||0))
+    .map(c=>{
+      const n = counts[c]||0;
+      return `<div class="brow">
+        <span class="bico" title="${c}">${bunny(CATS[c].b,30)}</span>
+        <span class="blabel">${c}</span>
+        <div class="btrack"><div class="bfill" style="width:${max?Math.round(n/max*100):0}%;background:${CATS[c].c}"></div></div>
+        <span class="bcount">${n} 日</span>
+      </div>`;
+    }).join("");
+  const cells = [];
+  for(let d=12; d<=30; d++){
+    const id = `2026-10-${String(d).padStart(2,"0")}`;
+    const e = DIARY.find(x=>x.id===id);
+    if(e){
+      const f = fmt(id);
+      cells.push(`<button class="cell" style="background:${CATS[e.cat].c}" title="${f.md} · ${e.cat}｜${e.title}" onclick="location.hash='${id}'">${d}</button>`);
+    }else{
+      cells.push(`<span class="cell rest" title="呢日冇群組訊息">${d}</span>`);
+    }
+  }
+  return `
+  <section class="statsbox">
+    <div class="stitle">🐰 心情統計</div>
+    <div class="bars">${rows}</div>
+    <div class="stitle2">🗓️ 逐日心情（10月12日 – 10月30日）</div>
+    <div class="strip">${cells.join("")}</div>
+    <div class="snote">👆 撳小格直接跳去嗰日；灰色虛線係冇訊息嘅日子。</div>
+  </section>`;
+}
+
+function renderList(){
+  const chips = ["全部",...Object.keys(CATS)].map(c=>{
+    const on = c===activeCat ? " on":"";
+    const e = CATS[c] ? CATS[c].e+" " : "";
+    return `<button class="chip${on}" onclick="setCat('${c}')">${e}${c}</button>`;
+  }).join("");
+  const cards = DIARY.filter(e=>activeCat==="全部"||e.cat===activeCat).map((e)=>{
+    const f = fmt(e.id);
+    return `
+    <div class="card" onclick="location.hash='${e.id}'">
+      <div class="row1">
+        <div class="emo">${bunny(CATS[e.cat].b,44)}</div>
+        <div class="date">${f.md} · ${f.wd}</div>
+        <div class="tag">${e.cat}</div>
+      </div>
+      <h3>${e.title}</h3>
+      <div class="teaser">${e.teaser}</div>
+      <div class="meta">${e.quotes.length?`💬 ${e.quotes.length} 則原話`:''}${e.quotes.length&&e.photos.length?' · ':''}${e.photos.length?`🖼️ ${e.photos.length} 張圖`:''}${(e.quotes.length||e.photos.length)?' · ':''}點開睇 →</div>
+    </div>`;
+  }).join("");
+  app.innerHTML = `
+    <div class="hero">
+      <div class="buddies">
+        <span class="deco d1">💜</span><span class="deco d2">✨</span><span class="deco d3">💉</span>
+        <div class="b1">${bunny("love",128,true)}</div>
+        <div class="b2">${bunny("laugh",90)}</div>
+      </div>
+      <h1>護理實習日記</h1>
+      <div class="sub">🍄👩(💉💄💙 626) 的醫院生存日常 · 整理自群組聊天記錄</div>
+      <svg class="ecg" viewBox="0 0 600 40">
+        <polyline points="0,20 80,20 95,20 105,5 115,35 125,20 200,20 215,20 225,8 235,32 245,20 320,20 335,20 345,4 355,36 365,20 440,20 455,20 465,6 475,34 485,20 600,20"
+          fill="none" stroke="var(--accent)" stroke-width="2" opacity=".55"/>
+      </svg>
+      <div class="stats">
+        <span class="stat">📅 2026.10.12 – 10.30</span>
+        <span class="stat">📝 ${DIARY.length} 篇</span>
+        <span class="stat">💬 ${totalQ} 則原話</span>
+      </div>
+    </div>
+    <div class="note">
+      💡 <b>點卡片睇全文</b>，每篇都有獨立網址可以直接分享。分類標籤淨係得「熱」都出現咗 3 次，你就知道呢間醫院幾熱。
+    </div>
+    ${moodStats()}
+    <div class="chips">${chips}</div>
+    <div class="grid">${cards || '<div style="color:var(--sub);padding:30px">呢個分類暫時冇日記～</div>'}</div>`;
+}
+
+function renderDetail(e){
+  const f = fmt(e.id);
+  const i = DIARY.indexOf(e);
+  const prev = DIARY[i-1], next = DIARY[i+1];
+  const body = e.body.map(p=>`<p>${p}</p>`).join("");
+  const quotes = e.quotes.map(([t,x])=>`<div class="qb">${x}<div class="qt">🍄👩 626 · ${f.md} ${t}</div></div>`).join("");
+  const photos = e.photos.length ? `
+    <h2 class="sec">🖼️ 照片牆</h2>
+    <div class="phgrid">${e.photos.map(p=> p.src
+      ? `<div class="ph hasimg" onclick="openLb('${p.src}','${p.label}')"><img src="${p.src}" alt="${p.label}"><div class="cap">${p.label}${p.time?` · ${p.time}`:""}</div></div>`
+      : `<div class="ph">${bunny("huh",40)}<div>${p.label}</div><div class="t">${p.time||""} · 圖片待補</div></div>`
+    ).join("")}
+    </div>` : "";
+  app.innerHTML = `
+    <div class="detail">
+      <a class="back" href="#">← 返回目錄</a>
+      <div class="dcard">
+        <div class="d-date">第 ${i+1} / ${DIARY.length} 篇 · ${f.y} 年 ${f.md} · ${f.wd}</div>
+        <div class="d-meta">
+          <span class="pill cat">${bunny(CATS[e.cat].b,20)} ${e.cat}</span>
+          ${e.quotes.length?`<span class="pill">💬 ${e.quotes.length} 則原話</span>`:""}
+          ${e.photos.length?`<span class="pill">🖼️ ${e.photos.length} 張圖</span>`:""}
+        </div>
+        <h1>${e.title}</h1>
+        <div class="d-body">${body}</div>
+        ${quotes?`<h2 class="sec">💬 原話重現</h2>${quotes}`:""}
+        ${photos}
+        <div class="share"><button onclick="shareThis()">🔗 複製呢篇日記嘅網址，直接分享</button></div>
+      </div>
+      <div class="pn">
+        <button ${prev?"onclick=\"location.hash='"+prev.id+"'\"":"disabled"}>${prev?`← ${fmt(prev.id).md}`:"←"}<small>${prev?prev.title:"已經係第一篇"}</small></button>
+        <button ${next?"onclick=\"location.hash='"+next.id+"'\"":"disabled"}>${next?`${fmt(next.id).md} →`:"→"}<small>${next?next.title:"已經係最新一篇"}</small></button>
+      </div>
+    </div>`;
+}
+
+function render(){
+  const h = decodeURIComponent(location.hash.replace(/^#\/?/,""));
+  const e = DIARY.find(x=>x.id===h);
+  if(e) renderDetail(e); else renderList();
+  window.scrollTo({top:0});
+  document.title = e ? `${e.title}｜護理實習日記` : "護理實習日記 🩺｜626 的醫院生存日常";
+}
+function setCat(c){ activeCat = c; if(location.hash) location.hash=""; else render(); }
+function randomDay(){ location.hash = DIARY[Math.floor(Math.random()*DIARY.length)].id; }
+function shareThis(){
+  const url = location.href;
+  const done = ()=>toast("✅ 已複製，貼俾朋友啦！");
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(done).catch(()=>fallback());
+  } else fallback();
+  function fallback(){
+    const ta=document.createElement("textarea");ta.value=url;document.body.appendChild(ta);
+    ta.select();try{document.execCommand("copy");done();}catch(err){toast("網址："+url);}
+    ta.remove();
+  }
+}
+function toast(m){
+  const t=document.getElementById("toast");t.textContent=m;t.classList.add("on");
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2200);
+}
+function openLb(src,label){
+  const lb=document.getElementById("lb");
+  lb.querySelector("img").src=src;
+  lb.querySelector(".cap").textContent=label;
+  lb.classList.add("on");
+}
+function toggleDark(){
+  const c=document.documentElement.classList;c.toggle("dark");
+  localStorage.setItem("nd-dark", c.contains("dark")?"1":"0");
+  darkBtn.textContent = c.contains("dark")?"☀️":"🌙";
+}
+if(localStorage.getItem("nd-dark")==="1"){document.documentElement.classList.add("dark");darkBtn.textContent="☀️";}
+document.getElementById("footbunny").innerHTML = bunny("sleep",56)+" 🌙";
+window.addEventListener("hashchange",render);
+render();
+</script>
+</body>
+</html>
